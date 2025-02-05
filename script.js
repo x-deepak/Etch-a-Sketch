@@ -26,22 +26,27 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-container.addEventListener("mouseover", (event) => {
-    console.log(event.target.className);
+
+let color = true;
+
+
+function cell_hover_color_style(event){
+    // console.log(event.target.className);
     if (event.target.className=="grid-cell"){
         let a = getRandomInt(0,256);
         let b = getRandomInt(0,256);
         let c = getRandomInt(0,256);
-
-        event.target.style.backgroundColor = `rgb(${0},${0},${0})`;
+        if (color==false) a=b=c=0;
+        event.target.style.backgroundColor = `rgb(${a},${b},${c})`;
         if (initial_opacity<1){
             event.target.style.opacity = (initial_opacity+=0.1);
         }
         event.target.classList.remove("grid-cell");
     }
-});
+}
 
 
+container.addEventListener("mouseover", cell_hover_color_style);
 
 let btn = document.querySelector("#user-grid-size");
 
@@ -59,3 +64,25 @@ btn.addEventListener("click", ()=>{
 
 
 generate_grid(grid_size);
+
+let modes_buttons = document.querySelector(".modes-buttons");
+
+modes_buttons.addEventListener("click", (event) => {
+    if (event.target.id=="color-btn"){
+        initial_opacity=0.1;
+        color = true;
+        container.removeEventListener("mouseover",cell_hover_color_style);
+        container.addEventListener("mouseover", cell_hover_color_style);
+    }
+    else if(event.target.id=="reset-btn"){
+        initial_opacity=0.1;
+        generate_grid(grid_size);
+    }
+    else if(event.target.id=="black-btn"){
+        initial_opacity=0.1;
+        color = false;
+        container.removeEventListener("mouseover",cell_hover_color_style);
+        container.addEventListener("mouseover", cell_hover_color_style);
+
+    }
+});
